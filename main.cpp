@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
-
+#include <string>
 using namespace std;
 
 bool break_loop = false;
@@ -74,16 +74,14 @@ void direct(){
         break;
 
         default:
-            throw std::invalid_argument("INVALID CODE");
-
-
+            throw invalid_argument("INVALID INTEGER AT ADDRESS: " + to_string(programCounter  - 1));
 
     }
 }
 
 int main() {
    ram[0] = 901;
-   ram[1] = 322;
+   ram[1] = 3022;
    ram[2] = 323;
    ram[3] = 809;
    ram[4] = 322;
