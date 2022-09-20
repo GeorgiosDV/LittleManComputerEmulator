@@ -10,7 +10,7 @@ int instructionRegister;
 int addressRegister;
 int accumulator;
 
-int maxMemory = 99;
+int maxMemory = 25;
 vector<int> ram(maxMemory, 0);
 
 void HLT(){
@@ -52,12 +52,12 @@ void BRZ(){
 
 }
 void BRP(){
-    if (addressRegister < 0){
+    if (accumulator >= 0){
         programCounter = addressRegister;
     }
 }
 
-int direct(){
+void direct(){
     switch (instructionRegister) {
 //      HLT
         case 0:
@@ -98,25 +98,42 @@ int direct(){
             else if (addressRegister == 2){
                 OUT();
             }
-            break;
+        break;
 
     }
 }
 
 int main() {
-    ram[0] = 504;
-    ram[1] = 205;
-    ram[2] = 306;
-    ram[3] = 902;
-    ram[4] = 005;
-    ram[5] = 020;
+   ram[0] = 901;
+   ram[1] = 322;
+   ram[2] = 323;
+   ram[3] = 809;
+   ram[4] = 322;
+   ram[5] = 525;
+   ram[6] = 222;
+   ram[7] = 322;
+   ram[8] = 323;
+   ram[9] = 521;
+   ram[10] = 122;
+   ram[11] = 321;
+   ram[12] = 523;
+   ram[13] = 224;
+   ram[14] = 323;
+   ram[15] = 809;
+   ram[16] = 521;
+   ram[17] = 222;
+   ram[18] = 321;
+   ram[19] = 902;
+   ram[24] = 1;
+
 
     while (!break_loop){
         instructionRegister = ram.at(programCounter) / 100;
-        addressRegister = ram.at(programCounter) - (instructionRegister * 100);
+        addressRegister = ram.at(programCounter) % 100 ;
         programCounter += 1;
-//        cout << instructionRegister << "\t" << addressRegister<< endl;
+        cout << instructionRegister << "\t" << addressRegister << "\t" << accumulator << endl;
         direct();
     }
+    return 0;
 }
 
