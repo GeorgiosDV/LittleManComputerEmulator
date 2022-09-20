@@ -13,90 +13,62 @@ int accumulator;
 int maxMemory = 25;
 vector<int> ram(maxMemory, 0);
 
-void HLT(){
-    cout << "HALT" << endl;
-    break_loop = true;
-}
-void INP(){
-    cout << "INPUT REQUIRED:";
-    cin >> accumulator;
-}
-void OUT(){
-    cout << accumulator << endl;
-}
-void ADD(){
-    accumulator += ram[addressRegister];
-}
-
-void SUB(){
-    accumulator -= ram[addressRegister] ;
-
-}
-
-void STA(){
-    ram[addressRegister] = accumulator;
-}
-
-void LDA(){
-    accumulator = ram[addressRegister];
-}
-
-void BRA(){
-    programCounter = addressRegister;
-}
-
-void BRZ(){
-    if (accumulator == 0){
-        programCounter = addressRegister;
-    }
-
-}
-void BRP(){
-    if (accumulator >= 0){
-        programCounter = addressRegister;
-    }
-}
-
 void direct(){
     switch (instructionRegister) {
 //      HLT
         case 0:
-        HLT();
+        cout << "HALT" << endl;
+        break_loop = true;
         break;
+
 //      ADD
         case 1:
-        ADD();
+        accumulator += ram[addressRegister];
         break;
+
 //      SUB
         case 2:
-        SUB();
+        accumulator -= ram[addressRegister];
         break;
+
 //      STA
         case 3:
-        STA();
+        ram[addressRegister] = accumulator;
         break;
+
 //      LDA
         case 5:
-        LDA();
+        accumulator = ram[addressRegister];
         break;
+
 //      BRA
         case 6:
-        BRA();
+        programCounter = addressRegister;
         break;
+
 //      BRZ
         case 7:
-        BRZ();
+        if (accumulator == 0){
+            programCounter = addressRegister;
+        }
         break;
+
 //      BRP
         case 8:
-        BRP();
+        if (accumulator >= 0){
+            programCounter = addressRegister;
+        }
         break;
+
         case 9:
+//          INP
             if (addressRegister == 1){
-                INP();
+                cout << "INPUT REQUIRED:";
+                cin >> accumulator;
             }
+//          OUT
             else if (addressRegister == 2){
-                OUT();
+                cout << accumulator << endl;
             }
         break;
 
