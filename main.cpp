@@ -1,49 +1,50 @@
 #include <iostream>
 #include <vector>
+#include <stdexcept>
+
 using namespace std;
 
 bool break_loop = false;
 int programCounter = 0;
 
-
 int instructionRegister;
 int addressRegister;
 int accumulator;
 
-int maxMemory = 25;
+int maxMemory = 99;
 vector<int> ram(maxMemory, 0);
 
 void direct(){
     switch (instructionRegister) {
 //      HLT
         case 0:
-        cout << "HALT" << endl;
-        break_loop = true;
+            cout << "HALT" << endl;
+            break_loop = true;
         break;
 
 //      ADD
         case 1:
-        accumulator += ram[addressRegister];
+            accumulator += ram[addressRegister];
         break;
 
 //      SUB
         case 2:
-        accumulator -= ram[addressRegister];
+            accumulator -= ram[addressRegister];
         break;
 
 //      STA
         case 3:
-        ram[addressRegister] = accumulator;
+            ram[addressRegister] = accumulator;
         break;
 
 //      LDA
         case 5:
-        accumulator = ram[addressRegister];
+            accumulator = ram[addressRegister];
         break;
 
 //      BRA
         case 6:
-        programCounter = addressRegister;
+            programCounter = addressRegister;
         break;
 
 //      BRZ
@@ -55,9 +56,9 @@ void direct(){
 
 //      BRP
         case 8:
-        if (accumulator >= 0){
-            programCounter = addressRegister;
-        }
+            if (accumulator >= 0){
+                programCounter = addressRegister;
+            }
         break;
 
         case 9:
@@ -71,6 +72,11 @@ void direct(){
                 cout << accumulator << endl;
             }
         break;
+
+        default:
+            throw std::invalid_argument("INVALID CODE");
+
+
 
     }
 }
@@ -103,7 +109,6 @@ int main() {
         instructionRegister = ram.at(programCounter) / 100;
         addressRegister = ram.at(programCounter) % 100 ;
         programCounter += 1;
-        cout << instructionRegister << "\t" << addressRegister << "\t" << accumulator << endl;
         direct();
     }
     return 0;
