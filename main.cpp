@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+
 using namespace std;
 
 bool break_loop = false;
@@ -104,11 +105,10 @@ int main() {
 
 
     while (!break_loop){
-        instructionRegister = ram.at(programCounter) / 100;
-        addressRegister = ram.at(programCounter) % 100 ;
+        instructionRegister = ram[programCounter] / 100;
+        addressRegister = ram[programCounter] % 100 ;
         programCounter += 1;
         direct();
     }
     return 0;
 }
-
