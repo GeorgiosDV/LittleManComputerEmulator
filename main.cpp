@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -15,100 +16,142 @@ int accumulator;
 int maxMemory = 99;
 vector<int> ram(maxMemory, 0);
 
-void direct(){
+void direct() {
     switch (instructionRegister) {
 //      HLT
         case 0:
             cout << "HALT" << endl;
             break_loop = true;
-        break;
+            break;
 
 //      ADD
         case 1:
             accumulator += ram[addressRegister];
-        break;
+            break;
 
 //      SUB
         case 2:
             accumulator -= ram[addressRegister];
-        break;
+            break;
 
 //      STA
         case 3:
             ram[addressRegister] = accumulator;
-        break;
+            break;
 
 //      LDA
         case 5:
             accumulator = ram[addressRegister];
-        break;
+            break;
 
 //      BRA
         case 6:
             programCounter = addressRegister;
-        break;
+            break;
 
 //      BRZ
         case 7:
-        if (accumulator == 0){
-            programCounter = addressRegister;
-        }
-        break;
+            if (accumulator == 0) {
+                programCounter = addressRegister;
+            }
+            break;
 
 //      BRP
         case 8:
-            if (accumulator >= 0){
+            if (accumulator >= 0) {
                 programCounter = addressRegister;
             }
-        break;
+            break;
 
         case 9:
 //          INP
-            if (addressRegister == 1){
+            if (addressRegister == 1) {
                 cout << "INPUT REQUIRED:";
                 cin >> accumulator;
             }
 //          OUT
-            else if (addressRegister == 2){
+            else if (addressRegister == 2) {
                 cout << accumulator << endl;
             }
-        break;
+            break;
 
         default:
-            throw invalid_argument("INVALID INTEGER AT ADDRESS: " + to_string(programCounter  - 1));
+            throw invalid_argument("INVALID INTEGER AT ADDRESS: " + to_string(programCounter - 1));
 
     }
 }
 
-int main() {
-   ram[0] = 901;
-   ram[1] = 322;
-   ram[2] = 323;
-   ram[3] = 809;
-   ram[4] = 322;
-   ram[5] = 525;
-   ram[6] = 222;
-   ram[7] = 322;
-   ram[8] = 323;
-   ram[9] = 521;
-   ram[10] = 122;
-   ram[11] = 321;
-   ram[12] = 523;
-   ram[13] = 224;
-   ram[14] = 323;
-   ram[15] = 809;
-   ram[16] = 521;
-   ram[17] = 222;
-   ram[18] = 321;
-   ram[19] = 902;
-   ram[24] = 1;
-
-
-    while (!break_loop){
-        instructionRegister = ram[programCounter] / 100;
-        addressRegister = ram[programCounter] % 100 ;
-        programCounter += 1;
-        direct();
+vector<string> parse(const string &filename) {
+    ifstream inputFile(filename);
+    std::vector<std::string> lines;
+    if (not inputFile.good()) {
+        throw invalid_argument("File Does not exist");
     }
-    return 0;
+    for (std::string line; std::getline(inputFile, line);) {
+        cout << line << endl;
+        lines.push_back(line);
+    }
+    return lines;
 }
+
+vector<int> interpret(const vector<string> &program) {
+    vector<vector<string>> parsedSeperatedStrings;
+    for (auto seperatedLine: program) {
+        string delimiter = "\t";
+        int pos = 0;
+        string token;
+        vector<string> seperatedInstructions;
+        while ((pos = seperatedLine.find(delimiter)) != string::npos) {
+            seperatedInstructions.push_back(seperatedLine.substr(0, pos));
+            seperatedLine.erase(0, pos + delimiter.length());
+        }
+        parsedSeperatedStrings.push_back(seperatedInstructions);
+
+    }
+    vector<int> interpretedProgram;
+    for (int i = 0; i < parsedSeperatedStrings.size(); ++i) {
+        switch (parsedSeperatedStrings[i].size()) {
+            case 1:
+                if (parsedSeperatedStrings[i][0] == "HLT") {
+                    interpretedProgram.push_back(0);
+                } else if (parsedSeperatedStrings[i][0] == "INP") {
+                    interpretedProgram.push_back(901);
+
+                } else if (parsedSeperatedStrings[i][0] == "OUT") {
+                    interpretedProgram.push_back(902);
+                } else {
+
+                }
+                break;
+
+            case 2:
+                if (parsedSeperatedStrings[i][0] == "HLT") {
+                    interpretedProgram.push_back(0);
+                } else if (parsedSeperatedStrings[i][0] == "INP") {
+                    interpretedProgram.push_back(901);
+
+                } else if (parsedSeperatedStrings[i][0] == "OUT") {
+                    interpretedProgram.push_back(902);
+                    break;
+
+                    case 3:
+                        break;
+
+                }
+        }
+
+
+        return interpretedProgram;
+    }
+
+    int main(int argc, char *argv[]) {
+        parse(argv[1]);
+        (void) argc;
+        while (!break_loop) {
+            instructionRegister = ram[programCounter] / 100;
+            addressRegister = ram[programCounter] % 100;
+            programCounter += 1;
+            direct();
+        }
+        return 0;
+    }
