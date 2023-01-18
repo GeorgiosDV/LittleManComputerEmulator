@@ -84,7 +84,7 @@ void direct() {
 vector<string> parse(const string &filename) {
     ifstream inputFile(filename);
     std::vector<std::string> lines;
-    if (not inputFile.good()) {
+    if (!inputFile.good()) {
         throw invalid_argument("File Does not exist");
     }
     for (std::string line; std::getline(inputFile, line);) {
@@ -97,18 +97,19 @@ vector<string> parse(const string &filename) {
 vector<int> interpret(const vector<string> &program) {
     vector<vector<string>> parsedSeperatedStrings;
     for (auto seperatedLine: program) {
-        string delimiter = "\t";
         int pos = 0;
         string token;
         vector<string> seperatedInstructions;
-        while ((pos = seperatedLine.find(delimiter)) != string::npos) {
-            seperatedInstructions.push_back(seperatedLine.substr(0, pos));
-            seperatedLine.erase(0, pos + delimiter.length());
+        while (seperatedLine.find("\t") != string::npos) {
+            seperatedInstructions.push_back(seperatedLine.substr(0, seperatedLine.find("\t")));
+            seperatedLine.erase(0, pos);
         }
         parsedSeperatedStrings.push_back(seperatedInstructions);
 
     }
     vector<int> interpretedProgram;
+    vector<string> variables;
+    vector<string> loops;
     for (int i = 0; i < parsedSeperatedStrings.size(); ++i) {
         switch (parsedSeperatedStrings[i].size()) {
             case 1:
@@ -125,33 +126,35 @@ vector<int> interpret(const vector<string> &program) {
                 break;
 
             case 2:
-                if (parsedSeperatedStrings[i][0] == "HLT") {
+                if (parsedSeperatedStrings[i][0] == "STA") {
                     interpretedProgram.push_back(0);
-                } else if (parsedSeperatedStrings[i][0] == "INP") {
+                } else if (parsedSeperatedStrings[i][0] == "LDA") {
                     interpretedProgram.push_back(901);
 
-                } else if (parsedSeperatedStrings[i][0] == "OUT") {
+                } else if (parsedSeperatedStrings[i][0] == "ADD") {
                     interpretedProgram.push_back(902);
                     break;
 
                     case 3:
-                        break;
+                    
+                    break;
 
                 }
         }
 
 
-        return interpretedProgram;
     }
+    return interpretedProgram;
+}
 
-    int main(int argc, char *argv[]) {
-        parse(argv[1]);
-        (void) argc;
-        while (!break_loop) {
-            instructionRegister = ram[programCounter] / 100;
-            addressRegister = ram[programCounter] % 100;
-            programCounter += 1;
-            direct();
-        }
-        return 0;
+int main(int argc, char *argv[]) {
+    parse(argv[1]);
+    (void) argc;
+    while (!break_loop) {
+        instructionRegister = ram[programCounter] / 100;
+        addressRegister = ram[programCounter] % 100;
+        programCounter += 1;
+        direct();
     }
+    return 0;
+}
