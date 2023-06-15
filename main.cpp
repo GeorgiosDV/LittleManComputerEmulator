@@ -16,6 +16,7 @@ int accumulator;
 int maxMemory = 99;
 vector<int> ram(maxMemory, 0);
 
+// use the global instruction register to execute each instruction
 void direct() {
     switch (instructionRegister) {
 //      HLT
@@ -81,6 +82,7 @@ void direct() {
     }
 }
 
+// Parse the file given as a vector of strings
 vector<string> parse(const string &filename) {
     ifstream inputFile(filename);
     std::vector<std::string> lines;
@@ -94,6 +96,28 @@ vector<string> parse(const string &filename) {
     return lines;
 }
 
+// Convert any line that is only one opcode into an instruction
+int ones(string instruction){
+    if (instruction == "HLT") {
+        return 0;
+    } else if (instruction == "INP") {
+        return 901;
+
+    } else if (instruction == "OUT") {
+        return 902;
+    } else {
+        throw invalid_argument("INVALID INSTRUCTION");
+    }
+}
+int twos (vector<string>) {
+    if (parsedSeperatedStrings[i][0] == "STA") {
+        interpretedProgram.push_back(0);
+    } else if (parsedSeperatedStrings[i][0] == "LDA") {
+        interpretedProgram.push_back(901);
+
+    } else if (parsedSeperatedStrings[i][0] == "ADD") {
+        interpretedProgram.push_back(-1);
+}
 vector<int> interpret(const vector<string> &program) {
     vector<vector<string>> parsedSeperatedStrings;
     for (auto seperatedLine: program) {
@@ -113,30 +137,16 @@ vector<int> interpret(const vector<string> &program) {
     for (int i = 0; i < parsedSeperatedStrings.size(); ++i) {
         switch (parsedSeperatedStrings[i].size()) {
             case 1:
-                if (parsedSeperatedStrings[i][0] == "HLT") {
-                    interpretedProgram.push_back(0);
-                } else if (parsedSeperatedStrings[i][0] == "INP") {
-                    interpretedProgram.push_back(901);
-
-                } else if (parsedSeperatedStrings[i][0] == "OUT") {
-                    interpretedProgram.push_back(902);
-                } else {
-
-                }
+                interpretedProgram.push_back(ones(parsedSeperatedStrings[i][0]));
                 break;
 
             case 2:
-                if (parsedSeperatedStrings[i][0] == "STA") {
-                    interpretedProgram.push_back(0);
-                } else if (parsedSeperatedStrings[i][0] == "LDA") {
-                    interpretedProgram.push_back(901);
 
-                } else if (parsedSeperatedStrings[i][0] == "ADD") {
-                    interpretedProgram.push_back(902);
                     break;
-
                     case 3:
-                    
+
+
+
                     break;
 
                 }
@@ -151,6 +161,7 @@ int main(int argc, char *argv[]) {
     parse(argv[1]);
     (void) argc;
     while (!break_loop) {
+
         instructionRegister = ram[programCounter] / 100;
         addressRegister = ram[programCounter] % 100;
         programCounter += 1;
