@@ -144,9 +144,6 @@ vector<int> interpret(const vector<string> &program) {
 
                     break;
                     case 3:
-
-
-
                     break;
 
                 }
