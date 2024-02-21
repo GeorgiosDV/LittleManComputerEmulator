@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -15,100 +16,87 @@ int accumulator;
 int maxMemory = 99;
 vector<int> ram(maxMemory, 0);
 
-void direct(){
+void direct() {
     switch (instructionRegister) {
-//      HLT
-        case 0:
+        case 0: // HLT
             cout << "HALT" << endl;
             break_loop = true;
-        break;
-
-//      ADD
-        case 1:
+            break;
+        case 1: // ADD
             accumulator += ram[addressRegister];
-        break;
-
-//      SUB
-        case 2:
+            break;
+        case 2: // SUB
             accumulator -= ram[addressRegister];
-        break;
-
-//      STA
-        case 3:
+            break;
+        case 3: // STA
             ram[addressRegister] = accumulator;
-        break;
-
-//      LDA
-        case 5:
+            break;
+        case 5: // LDA
             accumulator = ram[addressRegister];
-        break;
-
-//      BRA
-        case 6:
-            programCounter = addressRegister;
-        break;
-
-//      BRZ
-        case 7:
-        if (accumulator == 0){
-            programCounter = addressRegister;
-        }
-        break;
-
-//      BRP
-        case 8:
-            if (accumulator >= 0){
+            break;
+        case 6: // BRA
+        case 7: // BRZ
+            if (instructionRegister == 6 || (instructionRegister == 7 && accumulator == 0)) {
                 programCounter = addressRegister;
             }
-        break;
-
-        case 9:
-//          INP
-            if (addressRegister == 1){
+            break;
+        case 8: // BRP
+            if (accumulator >= 0) {
+                programCounter = addressRegister;
+            }
+            break;
+        case 9: // INP/OUT
+            if (addressRegister == 1) {
                 cout << "INPUT REQUIRED:";
                 cin >> accumulator;
-            }
-//          OUT
-            else if (addressRegister == 2){
+            } else if (addressRegister == 2) {
                 cout << accumulator << endl;
             }
-        break;
-
+            break;
         default:
-            throw invalid_argument("INVALID INTEGER AT ADDRESS: " + to_string(programCounter  - 1));
-
+            throw invalid_argument("INVALID INTEGER AT ADDRESS: " + to_string(programCounter - 1));
     }
 }
 
-int main() {
-   ram[0] = 901;
-   ram[1] = 322;
-   ram[2] = 323;
-   ram[3] = 809;
-   ram[4] = 322;
-   ram[5] = 525;
-   ram[6] = 222;
-   ram[7] = 322;
-   ram[8] = 323;
-   ram[9] = 521;
-   ram[10] = 122;
-   ram[11] = 321;
-   ram[12] = 523;
-   ram[13] = 224;
-   ram[14] = 323;
-   ram[15] = 809;
-   ram[16] = 521;
-   ram[17] = 222;
-   ram[18] = 321;
-   ram[19] = 902;
-   ram[24] = 1;
 
+void readInstructions(istream& input) {
+    string inputLine;
+    int inputNumber;
+    int inputCount = 0;
+    
+    while (inputCount < maxMemory && getline(input, inputLine)) {
+        if (inputLine.empty()){ 
+            break;
+        }
+        try {
+            inputNumber = stoi(inputLine);
+            ram[inputCount++] = inputNumber;
+        } catch (const invalid_argument& ia) {
+            cerr << "Invalid input. Please enter only integer numbers." << endl;
+        }
+    }
+}
 
-    while (!break_loop){
+int main(int argc, char* argv[]) {
+    if (argc > 1) {  // Check if a file was given using the command line
+        ifstream file(argv[1]);
+        if (file) {
+            readInstructions(file);
+        } else {
+            cerr << "Failed to open file: " << argv[1] << endl;
+            return 1; 
+        }
+    } else {
+        cout << "Enter instructions:" << endl;
+        readInstructions(cin);
+    }
+
+    while (!break_loop) {
         instructionRegister = ram[programCounter] / 100;
-        addressRegister = ram[programCounter] % 100 ;
+        addressRegister = ram[programCounter] % 100;
         programCounter += 1;
         direct();
     }
+
     return 0;
 }
