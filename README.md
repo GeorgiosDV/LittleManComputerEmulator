@@ -2,7 +2,7 @@
 
 ## Overview
 
-LittleManComputerEmulator is an interpreter for the Little Man Computer (LMC). This Interpreter allows users to write, load, and run precompiled LMC programs.
+LittleManComputerEmulator is an interpreter for the Little Man Computer (LMC). This interpreter lets users write, load, and run precompiled LMC programs.
 
 ## Features
 
@@ -15,7 +15,7 @@ LittleManComputerEmulator is an interpreter for the Little Man Computer (LMC). T
 
 - **LMCP Files**: Files with the extension `.lmcp` contain human-readable instructions that define the behavior of the LMC program. 
 
-- **LMCB Files**: Files with the extension `.lmcb` are precompiled files generated from LMC program code. These files contain the compiled machine code that the interpreter reads and executes directly.
+- **LMCB Files**: Files with the extension `.lmcb` are precompiled files generated from the LMC program code. These files contain the compiled machine code the interpreter reads and executes directly.
 
 ## Getting Started
 
@@ -44,4 +44,4 @@ To run the interpreter and load an example program, use the following command:
 ./LMC <Examples/example.lmcb>
 ```
 
-Replace `<Examples/example.lmcb>` with the actual path to an `.lmcb` file in the `Examples` folder. If the program requires input, the interpreter will prompt you during execution.
+Replace `<Examples/example.lmcb>` with the actual path to a `.lmcb` file in the `Examples` folder. If the program requires input, the interpreter will prompt you during execution.
