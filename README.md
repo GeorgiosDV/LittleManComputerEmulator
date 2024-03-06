@@ -13,7 +13,7 @@ LittleManComputerEmulator is an interpreter for the Little Man Computer (LMC). T
 
 ## File Extensions
 
-- **LMCP Files**: Files with the extension `.lmcp` contain human-readable instructions that define the behavior of the LMC program. 
+- **LMCP Files**: Files with the extension `.lmcp` contain human-readable instructions that define the behavior of the LMC program.
 
 - **LMCB Files**: Files with the extension `.lmcb` are precompiled files generated from the LMC program code. These files contain the compiled machine code the interpreter reads and executes directly.
 
@@ -28,13 +28,13 @@ To run the LittleManComputerEmulator, you need:
 
 ### Compilation
 
-To compile the interpreter, navigate to the project directory and run the following command :
+To compile the interpreter, navigate to the project directory and run the following command:
 
 ```bash
 g++ -o LMC main.cpp
 ```
 
-This command compiles the `main.cpp` file (and any other necessary source files) into an executable named `LMC`.
+This command compiles the `main.cpp` file into an executable named `LMC`.
 
 ### Running the Interpreter
 
